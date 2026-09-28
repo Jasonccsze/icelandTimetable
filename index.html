@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Iceland 7-Day Plan</title>
+  <title>Iceland 7-Day Kanban Timetable</title>
   <style>
     :root {
       --bg: #0b1220;
@@ -32,7 +32,7 @@
     }
     header {
       background: linear-gradient(135deg, #0c4a6e, #1e3a5f 60%, #0b1220);
-      padding: 0.75rem 1.1rem;
+      padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -40,10 +40,11 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.65rem;
+      gap: 1rem;
       justify-content: space-between;
     }
-    header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+    header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { color: var(--text-muted); font-size: 0.85rem; }
     .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
     .btn {
       background: var(--surface-2);
@@ -61,109 +62,33 @@
       color: var(--accent);
       border-color: rgba(56,189,248,0.35);
     }
-
-    .pool-top {
-      padding: 0.35rem 0.65rem 0.45rem;
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
     }
-    .pool-top-inner {
-      background: var(--surface-2);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      padding: 0.3rem 0.45rem 0.35rem;
-    }
-    .pool-top-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.4rem;
-      margin-bottom: 0.25rem;
-    }
-    .pool-top-header h2 {
-      font-size: 0.72rem;
-      font-weight: 650;
-      color: var(--text-muted);
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-    .pool-slot-wrap {
-      border-radius: 6px;
-      transition: background 0.15s, border-color 0.15s;
-      border: 1px solid transparent;
-      padding: 0.1rem 0;
-    }
-    .pool-slot-wrap.drag-over {
-      background: rgba(56,189,248,0.12);
-      border-color: var(--accent);
-    }
-    .pool-cards-row {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      gap: 0.3rem;
-      min-height: 22px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 1px;
-    }
-    .pool-cards-row .memo {
-      width: auto;
-      min-width: 100px;
-      max-width: 130px;
-      flex-shrink: 0;
-      padding: 0.25rem 0.4rem;
-      border-left-width: 3px;
-    }
-    .pool-cards-row .memo .memo-title {
-      font-size: 0.7rem;
-      line-height: 1.25;
-      margin-bottom: 0;
-    }
-    .pool-cards-row .memo .memo-note { display: none; }
-    .pool-cards-row .memo .memo-tags { display: none; }
-    .pool-cards-row .memo .memo-time {
-      font-size: 0.58rem;
-      margin-bottom: 0.05rem;
-    }
-    .pool-cards-row .memo .memo-actions { top: 0.1rem; right: 0.15rem; }
-    .pool-cards-row .memo .memo-btn { width: 14px; height: 14px; font-size: 0.6rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+    .legend-dot.nature { background: var(--nature); }
+    .legend-dot.culture { background: var(--culture); }
+    .legend-dot.food { background: var(--food); }
+    .legend-dot.relax { background: var(--relax); }
+    .legend-dot.drive { background: var(--drive); }
 
     .board-wrap {
       overflow-x: auto;
-      overflow-y: auto;
-      padding: 0.65rem 0.85rem 1.1rem;
-      height: calc(100vh - 150px);
-      min-height: 260px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: auto;
-      scrollbar-color: var(--accent) var(--surface-2);
-    }
-    .board-wrap::-webkit-scrollbar {
-      height: 18px;
-      width: 12px;
-    }
-    .board-wrap::-webkit-scrollbar-track {
-      background: var(--surface-2);
-      border-radius: 10px;
-      margin: 0 4px;
-    }
-    .board-wrap::-webkit-scrollbar-thumb {
-      background: linear-gradient(90deg, #0ea5e9, var(--accent));
-      border-radius: 10px;
-      border: 3px solid var(--surface-2);
-      min-width: 48px;
-    }
-    .board-wrap::-webkit-scrollbar-thumb:hover {
-      background: #7dd3fc;
+      padding: 1rem;
+      height: calc(100vh - 140px);
     }
     .board {
       display: flex;
       gap: 0.85rem;
       min-width: max-content;
-      height: auto;
-      align-items: flex-start;
-      padding-bottom: 0.5rem;
+      height: 100%;
     }
 
     .day-col {
@@ -174,8 +99,7 @@
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      height: auto;
-      max-height: none;
+      max-height: 100%;
     }
     .day-col-header {
       padding: 0.85rem 1rem;
@@ -183,48 +107,12 @@
       border-bottom: 1px solid var(--border);
       border-radius: var(--radius) var(--radius) 0 0;
     }
-    .day-col-header-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.4rem;
-    }
     .day-col-header h2 {
       font-size: 1rem;
       font-weight: 650;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      flex: 1;
-      min-width: 0;
-    }
-    .day-move-btns {
-      display: flex;
-      gap: 0.2rem;
-      flex-shrink: 0;
-    }
-    .day-move-btn {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-    }
-    .day-move-btn:hover:not(:disabled) {
-      background: var(--accent);
-      color: #0b1220;
-      border-color: var(--accent);
-    }
-    .day-move-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
     }
     .day-num {
       background: var(--accent);
@@ -237,7 +125,6 @@
       justify-content: center;
       font-size: 0.85rem;
       font-weight: 700;
-      flex-shrink: 0;
     }
     .day-sub {
       font-size: 0.75rem;
@@ -264,7 +151,7 @@
 
     .slots {
       flex: 1;
-      overflow-y: visible;
+      overflow-y: auto;
       padding: 0.5rem;
       display: flex;
       flex-direction: column;
@@ -275,7 +162,7 @@
       background: var(--surface-2);
       border: 1px dashed var(--border);
       border-radius: 8px;
-      min-height: auto;
+      min-height: 80px;
       padding: 0.45rem;
       transition: background 0.15s, border-color 0.15s;
     }
@@ -374,23 +261,40 @@
     }
     .memo-btn:hover { color: #fff; background: rgba(0,0,0,0.55); }
 
+    .add-zone {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
     .add-btn {
-      width: auto;
+      width: 100%;
       background: transparent;
       border: 1px dashed var(--border);
       color: var(--text-muted);
-      padding: 0.15rem 0.45rem;
-      border-radius: 5px;
-      font-size: 0.68rem;
+      padding: 0.45rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.15s;
-      white-space: nowrap;
     }
     .add-btn:hover {
       border-color: var(--accent);
       color: var(--accent);
       background: rgba(56,189,248,0.06);
     }
+
+    .pool-col {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px dashed var(--border);
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+    }
+    .pool-col .day-col-header { background: rgba(148,163,184,0.08); }
+    .pool-slot { background: transparent; border: none; min-height: auto; padding: 0; }
+    .pool-slot .slot-label { display: none; }
 
     .modal-overlay {
       display: none;
@@ -444,29 +348,6 @@
       justify-content: flex-end;
       margin-top: 1rem;
     }
-
-    /* Summary modal for sharing */
-    .summary-modal .modal {
-      max-width: 480px;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .summary-modal textarea {
-      width: 100%;
-      min-height: 280px;
-      max-height: 55vh;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-      line-height: 1.45;
-      resize: vertical;
-    }
-
     .toast {
       position: fixed;
       bottom: 1.5rem;
@@ -485,17 +366,11 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 700px) {
-      .day-col { width: 280px; }
-      header h1 { font-size: 1.05rem; }
-      .board-wrap { height: calc(100vh - 140px); }
-      .board-wrap::-webkit-scrollbar { height: 22px; }
-      .board-wrap::-webkit-scrollbar-thumb {
-        border-width: 2px;
-        min-width: 56px;
-      }
+      .day-col, .pool-col { width: 280px; }
+      header h1 { font-size: 1.15rem; }
     }
     @media print {
-      .header-actions, .memo-actions, .day-move-btns, .pool-top-header .add-btn { display: none !important; }
+      .header-actions, .add-zone, .memo-actions, .pool-col { display: none !important; }
       .board-wrap { overflow: visible; height: auto; }
       .board { flex-wrap: wrap; }
       .day-col { break-inside: avoid; max-height: none; }
@@ -506,25 +381,24 @@
 <body>
   <header>
     <div>
-      <h1>🇮🇸 Iceland 7-Day Plan</h1>
+      <h1>🇮🇸 Iceland 7-Day Kanban Timetable</h1>
+      <p>AM / PM · Click day titles to edit · Edit cards for times · <strong>Reset</strong> if outdated</p>
     </div>
     <div class="header-actions">
       <button class="btn" onclick="resetBoard()">Reset to default</button>
-      <button class="btn primary" onclick="exportSummary()">Export summary</button>
+      <button class="btn" onclick="exportJSON()">Export JSON</button>
       <button class="btn primary" onclick="exportImage()">Export PNG</button>
+      <button class="btn primary" onclick="exportPDF()">Export PDF</button>
     </div>
   </header>
 
-  <div class="pool-top" id="pool-top">
-    <div class="pool-top-inner">
-      <div class="pool-top-header">
-        <h2>📋 Unassigned</h2>
-        <button class="add-btn" onclick="openAddModal('pool', 'pool')">+ New</button>
-      </div>
-      <div class="pool-slot-wrap slot" data-day-id="pool" data-period="pool" id="pool-slot">
-        <div class="pool-cards-row slot-cards" data-day="pool" data-period="pool" id="pool-cards"></div>
-      </div>
-    </div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot nature"></span> Nature</div>
+    <div class="legend-item"><span class="legend-dot culture"></span> Culture</div>
+    <div class="legend-item"><span class="legend-dot food"></span> Food</div>
+    <div class="legend-item"><span class="legend-dot relax"></span> Relax</div>
+    <div class="legend-item"><span class="legend-dot drive"></span> Transit</div>
+    <div class="legend-item" style="margin-left:auto;color:var(--text-muted)">Drag cards · Edit for exact start/end times</div>
   </div>
 
   <div class="board-wrap">
@@ -576,19 +450,6 @@
     </div>
   </div>
 
-  <!-- Summary share modal -->
-  <div class="modal-overlay summary-modal" id="summary-modal">
-    <div class="modal">
-      <h3>Plan summary</h3>
-      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem;">Copy and paste into a message or notes.</p>
-      <textarea id="summary-text" readonly></textarea>
-      <div class="form-actions">
-        <button class="btn" onclick="closeSummaryModal()">Close</button>
-        <button class="btn primary" onclick="copySummary()">Copy to clipboard</button>
-      </div>
-    </div>
-  </div>
-
   <div class="toast" id="toast"></div>
 
   <script>
@@ -601,73 +462,77 @@
       { id: 'd1', num: 1, title: '21 Nov · Arrival', sub: 'Reykjavík' },
       { id: 'd2', num: 2, title: '22 Nov · South Coast D1', sub: 'Skaftafell area' },
       { id: 'd3', num: 3, title: '23 Nov · South Coast D2', sub: 'Return Reykjavík' },
-      { id: 'd4', num: 4, title: '24 Nov · City', sub: 'Reykjavík' },
-      { id: 'd5', num: 5, title: '25 Nov · Golden Coast', sub: 'Reykjavík/Golden Coast' },
-      { id: 'd6', num: 6, title: '26 Nov · City', sub: 'Reykjavík' },
-      { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Airport by 09:55' },
+      { id: 'd4', num: 4, title: '24 Nov · Flex', sub: 'Reykjavík' },
+      { id: 'd5', num: 5, title: '25 Nov · GC + Aurora', sub: 'Reykjavík' },
+      { id: 'd6', num: 6, title: '26 Nov · City / Lagoon', sub: 'Reykjavík' },
+      { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Leave ~09:05 · KEF by 09:55' },
     ];
 
+    // memos: { id, dayId, period, title, note, type, start, end }
     const DEFAULT_MEMOS = [
-      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
-      { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
-      { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
-      { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
-      { id: 'm7', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
+      // Day 1 — 21 Nov
+      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 11:00', note: 'Clearance ~30–45 min', type: 'drive', start: '11:00', end: '' },
+      { id: 'm2', dayId: 'd1', period: 'am', title: 'Transfer to downtown', note: 'Flybus / taxi ~50 min', type: 'drive', start: '11:45', end: '12:35' },
+      { id: 'm3', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
+      { id: 'm4', dayId: 'd1', period: 'pm', title: 'Hallgrímskirkja', note: 'Rainbow Street', type: 'culture', start: '', end: '' },
+      { id: 'm5', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
+      { id: 'm6', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
-      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day · Pickup 09:00 · South coast day', type: 'nature', start: '09:00', end: '' },
+      // Day 2–3 — 2-Day South Coast + Ice Cave
+      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day block · Pickup 09:00', type: 'nature', start: '09:00', end: '' },
       { id: 'tour-sc1b', dayId: 'd2', period: 'am', title: '★ Waterfalls', note: 'Seljalandsfoss · Skógafoss', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Black Sand Beach', note: 'Reynisfjara', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Reynisfjara', note: 'Black sand beach', type: 'nature', start: '', end: '' },
       { id: 'tour-sc1d', dayId: 'd2', period: 'pm', title: '★ Hotel Skaftafell area', note: 'Overnight + optional NL', type: 'relax', start: '', end: '' },
 
-      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day tour continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Glacier Lagoon', note: 'Jökulsárlón', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day block continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Jökulsárlón', note: 'Glacier Lagoon', type: 'nature', start: '', end: '' },
       { id: 'tour-sc2c', dayId: 'd3', period: 'am', title: '★ Diamond Beach', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: '', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: 'Crystal or Katla', type: 'nature', start: '', end: '' },
       { id: 'tour-sc2e', dayId: 'd3', period: 'pm', title: '★ Return Reykjavík', note: 'Drop-off ~21:00', type: 'drive', start: '', end: '21:00' },
 
+      // Day 4
       { id: 'm29', dayId: 'd4', period: 'am', title: 'Recovery morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm30', dayId: 'd4', period: 'am', title: 'Reykjavik Roasters', note: 'Kárastígur 1, 101 Reykjavík', type: 'relax', start: '', end: '' },
+      { id: 'm30', dayId: 'd4', period: 'am', title: 'Museum / café', note: '', type: 'culture', start: '', end: '' },
       { id: 'm31', dayId: 'd4', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
       { id: 'm32', dayId: 'd4', period: 'pm', title: 'Free afternoon', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm34', dayId: 'd4', period: 'pm', title: 'The Icelandic Phallological Museum', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm34', dayId: 'd4', period: 'pm', title: 'Pool soak (opt.)', note: '', type: 'relax', start: '', end: '' },
       { id: 'm35', dayId: 'd4', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
+      // Day 5 — Mokka + GC Aurora
       { id: 'm-mokka', dayId: 'd5', period: 'am', title: 'Breakfast · Mokka Kaffi', note: 'Skólavörðustígur', type: 'food', start: '', end: '' },
       { id: 'm-free', dayId: 'd5', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
+      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day block · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
       { id: 'tour-gc2', dayId: 'd5', period: 'pm', title: '★ GC continues', note: 'Geysir · Gullfoss · Kerið', type: 'nature', start: '', end: '' },
-      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ Dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
+      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ GC ends + dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
       { id: 'tour-gc4', dayId: 'd5', period: 'pm', title: '★ Northern Lights hunt', note: 'Pickup ~20:30 · return ~00:00', type: 'nature', start: '20:30', end: '00:00' },
 
+      // Day 6
       { id: 'm36', dayId: 'd6', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk / shopping', note: '', type: 'culture', start: '', end: '' },
       { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Sky Lagoon (opt.)', note: '', type: 'relax', start: '', end: '' },
       { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
-      { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave ~09:05', type: 'food', start: '', end: '09:05' },
-      { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
-      { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
-
-      { id: 'm3', dayId: 'pool', period: 'pool', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
-      { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
-      { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
-      { id: 'pool-idazimsen', dayId: 'pool', period: 'pool', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
+      // Day 7 — Departure 11:55
+      { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave hotel ~09:05', type: 'food', start: '', end: '09:05' },
+      { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: 'Flybus / taxi ~50 min', type: 'drive', start: '09:05', end: '09:55' },
+      { id: 'm45', dayId: 'd7', period: 'am', title: 'At KEF', note: '2h before flight', type: 'drive', start: '09:55', end: '' },
+      { id: 'm46', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
     ];
 
     let memos = [];
     let editingId = null;
     let addTarget = { dayId: null, period: 'am' };
     let draggedId = null;
+
     let days = [];
 
     function loadState() {
       try {
-        const saved = localStorage.getItem('iceland-kanban-v12');
+        const saved = localStorage.getItem('iceland-kanban-v8');
         if (saved) {
           const data = JSON.parse(saved);
-          memos = data.memos || data;
+          memos = data.memos || data; // backward compat if array
           if (data.days) days = data.days;
           else days = JSON.parse(JSON.stringify(DAYS));
           return;
@@ -677,7 +542,7 @@
       days = JSON.parse(JSON.stringify(DAYS));
     }
     function saveState() {
-      localStorage.setItem('iceland-kanban-v12', JSON.stringify({ memos, days }));
+      localStorage.setItem('iceland-kanban-v8', JSON.stringify({ memos, days }));
     }
     function uid() {
       return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -717,48 +582,28 @@
       return d.innerHTML;
     }
 
-    function sortByIdSequence(list) {
-      return list.slice().sort((a, b) => {
-        const ia = memos.findIndex(m => m.id === a.id);
-        const ib = memos.findIndex(m => m.id === b.id);
-        return ia - ib;
-      });
-    }
-
-    function renderPool() {
-      const poolCards = document.getElementById('pool-cards');
-      if (!poolCards) return;
-      poolCards.innerHTML = '';
-      const list = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
-      list.forEach(m => poolCards.appendChild(createMemoEl(m)));
-    }
-
     function renderBoard() {
       const board = document.getElementById('board');
       board.innerHTML = '';
 
-      days.forEach((day, dayIndex) => {
+      days.forEach(day => {
         const col = document.createElement('div');
         col.className = 'day-col';
         col.dataset.dayId = day.id;
-        const canLeft = dayIndex > 0;
-        const canRight = dayIndex < days.length - 1;
         col.innerHTML = `
           <div class="day-col-header">
-            <div class="day-col-header-row">
-              <h2>
-                <span class="day-num">${day.num}</span>
-                <span class="day-title-edit" contenteditable="true" data-day-id="${day.id}" data-field="title" spellcheck="false">${escapeHtml(day.title)}</span>
-              </h2>
-              <div class="day-move-btns">
-                <button class="day-move-btn" title="Move day left" ${canLeft ? '' : 'disabled'} onclick="moveDay('${day.id}', -1)">←</button>
-                <button class="day-move-btn" title="Move day right" ${canRight ? '' : 'disabled'} onclick="moveDay('${day.id}', 1)">→</button>
-              </div>
-            </div>
+            <h2>
+              <span class="day-num">${day.num}</span>
+              <span class="day-title-edit" contenteditable="true" data-day-id="${day.id}" data-field="title" spellcheck="false">${escapeHtml(day.title)}</span>
+            </h2>
             <div class="day-sub day-sub-edit" contenteditable="true" data-day-id="${day.id}" data-field="sub" spellcheck="false">${escapeHtml(day.sub)}</div>
+          </div>
+          <div class="add-zone">
+            <button class="add-btn" onclick="openAddModal('${day.id}', 'am')">+ Add to Day ${day.num}</button>
           </div>
           <div class="slots" id="slots-${day.id}"></div>
         `;
+        // save day heading edits on blur
         col.querySelectorAll('[contenteditable]').forEach(el => {
           el.addEventListener('blur', () => {
             const id = el.dataset.dayId;
@@ -791,28 +636,37 @@
           slotsEl.appendChild(slotDiv);
 
           const cardsEl = slotDiv.querySelector('.slot-cards');
-          const list = sortByIdSequence(
-            memos.filter(m => m.dayId === day.id && m.period === period.id)
-          );
+          const list = memos
+            .filter(m => m.dayId === day.id && m.period === period.id)
+            .sort((a, b) => (a.start || '99:99').localeCompare(b.start || '99:99'));
           list.forEach(m => cardsEl.appendChild(createMemoEl(m)));
         });
       });
 
-      renderPool();
-    }
-
-    function moveDay(dayId, direction) {
-      const idx = days.findIndex(d => d.id === dayId);
-      if (idx < 0) return;
-      const newIdx = idx + direction;
-      if (newIdx < 0 || newIdx >= days.length) return;
-      const tmp = days[idx];
-      days[idx] = days[newIdx];
-      days[newIdx] = tmp;
-      days.forEach((d, i) => { d.num = i + 1; });
-      saveState();
-      renderBoard();
-      showToast(direction < 0 ? 'Moved day left' : 'Moved day right');
+      // Unassigned pool
+      const pool = document.createElement('div');
+      pool.className = 'pool-col';
+      pool.innerHTML = `
+        <div class="day-col-header">
+          <h2>📋 Unassigned</h2>
+          <div class="day-sub">Park cards here</div>
+        </div>
+        <div class="add-zone">
+          <button class="add-btn" onclick="openAddModal('pool', 'pool')">+ New memo</button>
+        </div>
+        <div class="slots">
+          <div class="slot pool-slot" data-day-id="pool" data-period="pool">
+            <div class="slot-cards" data-day="pool" data-period="pool" id="pool-cards"></div>
+          </div>
+        </div>
+      `;
+      const poolSlot = pool.querySelector('.slot');
+      poolSlot.addEventListener('dragover', onDragOver);
+      poolSlot.addEventListener('dragleave', onDragLeave);
+      poolSlot.addEventListener('drop', onDrop);
+      board.appendChild(pool);
+      const poolCards = document.getElementById('pool-cards');
+      memos.filter(m => m.dayId === 'pool').forEach(m => poolCards.appendChild(createMemoEl(m)));
     }
 
     function onDragStart(e) {
@@ -845,7 +699,7 @@
       const memo = memos.find(m => m.id === id);
       if (!memo) return;
       memo.dayId = dayId;
-      memo.period = period === 'pool' ? 'pool' : period;
+      memo.period = period === 'pool' ? 'am' : period;
       if (dayId === 'pool') memo.period = 'pool';
       saveState();
       renderBoard();
@@ -904,20 +758,19 @@
           m.type = type;
           m.start = start;
           m.end = end;
-          if (m.dayId !== 'pool') m.period = period;
+          m.period = period;
         }
       } else {
-        const newMemo = {
+        memos.push({
           id: uid(),
           dayId: addTarget.dayId,
-          period: addTarget.period === 'pool' ? 'pool' : (period || addTarget.period),
+          period: addTarget.period === 'pool' ? 'am' : (period || addTarget.period),
           title, note, type, start, end
-        };
+        });
         if (addTarget.dayId === 'pool') {
-          newMemo.dayId = 'pool';
-          newMemo.period = 'pool';
+          memos[memos.length - 1].dayId = 'pool';
+          memos[memos.length - 1].period = 'pool';
         }
-        memos.push(newMemo);
       }
       saveState();
       closeModal();
@@ -949,148 +802,39 @@
       showToast('Reset to default');
     }
 
-    /* —— Text summary for sharing (includes Unassigned) —— */
-    function buildSummaryText() {
-      const lines = [];
-      lines.push('🇮🇸 Iceland 7-Day Plan');
-      lines.push('─'.repeat(28));
-
-      days.forEach(day => {
-        lines.push('');
-        lines.push(`Day ${day.num} · ${day.title}`);
-        if (day.sub) lines.push(`  (${day.sub})`);
-
-        PERIODS.forEach(period => {
-          const list = sortByIdSequence(
-            memos.filter(m => m.dayId === day.id && m.period === period.id)
-          );
-          if (!list.length) return;
-          lines.push(`  ${period.id.toUpperCase()}`);
-          list.forEach(m => {
-            const t = formatTimeRange(m.start, m.end);
-            const timeBit = t ? ` [${t}]` : '';
-            const noteBit = m.note ? ` — ${m.note}` : '';
-            lines.push(`  • ${m.title}${timeBit}${noteBit}`);
-          });
-        });
-      });
-
-      const pool = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
-      lines.push('');
-      lines.push('📋 Unassigned');
-      if (pool.length) {
-        pool.forEach(m => {
-          const noteBit = m.note ? ` — ${m.note}` : '';
-          lines.push(`  • ${m.title}${noteBit}`);
-        });
-      } else {
-        lines.push('  (none)');
-      }
-
-      lines.push('');
-      lines.push('─'.repeat(28));
-      return lines.join('\n');
+    function exportJSON() {
+      const data = { exported: new Date().toISOString(), days, periods: PERIODS, memos };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'iceland-7day-kanban-plan.json';
+      a.click();
+      showToast('Exported JSON');
     }
 
-    function exportSummary() {
-      const text = buildSummaryText();
-      document.getElementById('summary-text').value = text;
-      document.getElementById('summary-modal').classList.add('show');
-    }
-
-    function closeSummaryModal() {
-      document.getElementById('summary-modal').classList.remove('show');
-    }
-
-    async function copySummary() {
-      const text = document.getElementById('summary-text').value;
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast('Copied to clipboard');
-      } catch (e) {
-        document.getElementById('summary-text').select();
-        try {
-          document.execCommand('copy');
-          showToast('Copied to clipboard');
-        } catch (e2) {
-          showToast('Select text and copy manually');
-        }
-      }
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        closeModal();
-        closeSummaryModal();
-      }
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     document.getElementById('modal').addEventListener('click', e => {
       if (e.target.id === 'modal') closeModal();
     });
-    document.getElementById('summary-modal').addEventListener('click', e => {
-      if (e.target.id === 'summary-modal') closeSummaryModal();
-    });
 
-    /**
-     * PNG export: 3×3-ish grid (4 + 3 days) so aspect ratio is closer to square,
-     * not one tall stack of 7 days.
-     */
+
     async function exportImage() {
       showToast('Rendering image…');
       const board = document.getElementById('board');
       const wrap = document.querySelector('.board-wrap');
-      const cols = Array.from(board.querySelectorAll('.day-col'));
-
-      const prev = {
-        wrapH: wrap.style.height,
-        wrapO: wrap.style.overflow,
-        boardDisplay: board.style.display,
-        boardFlexDir: board.style.flexDirection,
-        boardFlexWrap: board.style.flexWrap,
-        boardMinW: board.style.minWidth,
-        boardW: board.style.width,
-        boardGap: board.style.gap,
-        colStyles: cols.map(c => ({
-          w: c.style.width,
-          maxW: c.style.maxWidth,
-          flex: c.style.flex
-        }))
-      };
-
-      // ~3 columns wide → nearer square than 7-wide or 7-tall
-      const COL_W = 260;
-      const GAP = 10;
-      const COLS_PER_ROW = 3;
-      const boardW = COLS_PER_ROW * COL_W + (COLS_PER_ROW - 1) * GAP;
-
+      // temporarily expand so full board is captured
+      const prevH = wrap.style.height;
+      const prevO = wrap.style.overflow;
       wrap.style.height = 'auto';
       wrap.style.overflow = 'visible';
-
-      board.style.display = 'flex';
-      board.style.flexDirection = 'row';
-      board.style.flexWrap = 'wrap';
-      board.style.minWidth = '0';
-      board.style.width = boardW + 'px';
-      board.style.gap = GAP + 'px';
-
-      cols.forEach(col => {
-        col.style.width = COL_W + 'px';
-        col.style.maxWidth = COL_W + 'px';
-        col.style.flex = '0 0 ' + COL_W + 'px';
-      });
-
-      // Force layout before measure
-      void board.offsetHeight;
       board.style.minHeight = board.scrollHeight + 'px';
-
       try {
         const canvas = await html2canvas(board, {
           backgroundColor: '#0b1220',
           scale: 2,
           useCORS: true,
           logging: false,
-          width: boardW,
-          windowWidth: boardW,
+          windowWidth: board.scrollWidth,
           windowHeight: board.scrollHeight
         });
         const a = document.createElement('a');
@@ -1102,31 +846,56 @@
         console.error(e);
         showToast('Image export failed');
       } finally {
-        wrap.style.height = prev.wrapH;
-        wrap.style.overflow = prev.wrapO;
-        board.style.display = prev.boardDisplay;
-        board.style.flexDirection = prev.boardFlexDir;
-        board.style.flexWrap = prev.boardFlexWrap;
-        board.style.minWidth = prev.boardMinW;
-        board.style.width = prev.boardW;
-        board.style.gap = prev.boardGap;
-        cols.forEach((col, i) => {
-          if (prev.colStyles[i]) {
-            col.style.width = prev.colStyles[i].w;
-            col.style.maxWidth = prev.colStyles[i].maxW;
-            col.style.flex = prev.colStyles[i].flex;
-          }
-        });
+        wrap.style.height = prevH;
+        wrap.style.overflow = prevO;
       }
     }
 
-    document.getElementById('pool-slot').addEventListener('dragover', onDragOver);
-    document.getElementById('pool-slot').addEventListener('dragleave', onDragLeave);
-    document.getElementById('pool-slot').addEventListener('drop', onDrop);
+    async function exportPDF() {
+      showToast('Rendering PDF…');
+      const board = document.getElementById('board');
+      const wrap = document.querySelector('.board-wrap');
+      const prevH = wrap.style.height;
+      const prevO = wrap.style.overflow;
+      wrap.style.height = 'auto';
+      wrap.style.overflow = 'visible';
+      try {
+        const canvas = await html2canvas(board, {
+          backgroundColor: '#0b1220',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          windowWidth: board.scrollWidth,
+          windowHeight: board.scrollHeight
+        });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        // landscape, size based on content
+        const pxToMm = 0.264583;
+        const wMm = canvas.width * pxToMm;
+        const hMm = canvas.height * pxToMm;
+        const orientation = wMm > hMm ? 'l' : 'p';
+        const pdf = new jsPDF({
+          orientation,
+          unit: 'mm',
+          format: [wMm, hMm]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, wMm, hMm);
+        pdf.save('iceland-7day-timetable.pdf');
+        showToast('PDF downloaded');
+      } catch (e) {
+        console.error(e);
+        showToast('PDF export failed — try Print instead');
+      } finally {
+        wrap.style.height = prevH;
+        wrap.style.overflow = prevO;
+      }
+    }
 
     loadState();
     renderBoard();
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
