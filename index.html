@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Iceland 7-Day Kanban Timetable</title>
+  <title>Iceland 7-Day Plan</title>
   <style>
     :root {
       --bg: #0b1220;
@@ -462,55 +462,56 @@
       { id: 'd1', num: 1, title: '21 Nov · Arrival', sub: 'Reykjavík' },
       { id: 'd2', num: 2, title: '22 Nov · South Coast D1', sub: 'Skaftafell area' },
       { id: 'd3', num: 3, title: '23 Nov · South Coast D2', sub: 'Return Reykjavík' },
-      { id: 'd4', num: 4, title: '24 Nov · Flex', sub: 'Reykjavík' },
-      { id: 'd5', num: 5, title: '25 Nov · GC + Aurora', sub: 'Reykjavík' },
-      { id: 'd6', num: 6, title: '26 Nov · City / Lagoon', sub: 'Reykjavík' },
-      { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Leave ~09:05 · KEF by 09:55' },
+      { id: 'd4', num: 4, title: '24 Nov · City', sub: 'Reykjavík' },
+      { id: 'd5', num: 5, title: '25 Nov · Golden Coast', sub: 'Reykjavík' },
+      { id: 'd6', num: 6, title: '26 Nov · City', sub: 'Reykjavík' },
+      { id: 'd7', num: 7, title: '27 Nov · Departure 11:55', sub: 'Airport by 09:55' },
     ];
 
     // memos: { id, dayId, period, title, note, type, start, end }
     const DEFAULT_MEMOS = [
       // Day 1 — 21 Nov
-      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 11:00', note: 'Clearance ~30–45 min', type: 'drive', start: '11:00', end: '' },
-      { id: 'm2', dayId: 'd1', period: 'am', title: 'Transfer to downtown', note: 'Flybus / taxi ~50 min', type: 'drive', start: '11:45', end: '12:35' },
-      { id: 'm3', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
-      { id: 'm4', dayId: 'd1', period: 'pm', title: 'Hallgrímskirkja', note: 'Rainbow Street', type: 'culture', start: '', end: '' },
-      { id: 'm5', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
-      { id: 'm6', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
+      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
+      { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
+      { id: 'm3', dayId: 'd1', period: 'pm', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
+      { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
+      { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
+      { id: 'm7', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
       // Day 2–3 — 2-Day South Coast + Ice Cave
-      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day block · Pickup 09:00', type: 'nature', start: '09:00', end: '' },
+      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day · Pickup 09:00 · South coast day', type: 'nature', start: '09:00', end: '' },
       { id: 'tour-sc1b', dayId: 'd2', period: 'am', title: '★ Waterfalls', note: 'Seljalandsfoss · Skógafoss', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Reynisfjara', note: 'Black sand beach', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Black Sand Beach', note: 'Reynisfjara', type: 'nature', start: '', end: '' },
       { id: 'tour-sc1d', dayId: 'd2', period: 'pm', title: '★ Hotel Skaftafell area', note: 'Overnight + optional NL', type: 'relax', start: '', end: '' },
 
-      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day block continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Jökulsárlón', note: 'Glacier Lagoon', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day tour continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Glacier Lagoon', note: 'Jökulsárlón', type: 'nature', start: '', end: '' },
       { id: 'tour-sc2c', dayId: 'd3', period: 'am', title: '★ Diamond Beach', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: 'Crystal or Katla', type: 'nature', start: '', end: '' },
+      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: '', type: 'nature', start: '', end: '' },
       { id: 'tour-sc2e', dayId: 'd3', period: 'pm', title: '★ Return Reykjavík', note: 'Drop-off ~21:00', type: 'drive', start: '', end: '21:00' },
 
       // Day 4
       { id: 'm29', dayId: 'd4', period: 'am', title: 'Recovery morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm30', dayId: 'd4', period: 'am', title: 'Museum / café', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm30', dayId: 'd4', period: 'am', title: 'Reykjavik Roasters', note: 'Kárastígur 1, 101 Reykjavík', type: 'relax', start: '', end: '' },
       { id: 'm31', dayId: 'd4', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
       { id: 'm32', dayId: 'd4', period: 'pm', title: 'Free afternoon', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm34', dayId: 'd4', period: 'pm', title: 'Pool soak (opt.)', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm34', dayId: 'd4', period: 'pm', title: 'The Icelandic Phallological Museum', note: '', type: 'culture', start: '', end: '' },
       { id: 'm35', dayId: 'd4', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
       // Day 5 — Mokka + GC Aurora
       { id: 'm-mokka', dayId: 'd5', period: 'am', title: 'Breakfast · Mokka Kaffi', note: 'Skólavörðustígur', type: 'food', start: '', end: '' },
       { id: 'm-free', dayId: 'd5', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day block · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
+      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
       { id: 'tour-gc2', dayId: 'd5', period: 'pm', title: '★ GC continues', note: 'Geysir · Gullfoss · Kerið', type: 'nature', start: '', end: '' },
-      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ GC ends + dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
+      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ Dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
       { id: 'tour-gc4', dayId: 'd5', period: 'pm', title: '★ Northern Lights hunt', note: 'Pickup ~20:30 · return ~00:00', type: 'nature', start: '20:30', end: '00:00' },
 
       // Day 6
       { id: 'm36', dayId: 'd6', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk / shopping', note: '', type: 'culture', start: '', end: '' },
+      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
       { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Sky Lagoon (opt.)', note: '', type: 'relax', start: '', end: '' },
+      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
       { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
 
       // Day 7 — Departure 11:55
