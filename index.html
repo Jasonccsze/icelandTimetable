@@ -395,6 +395,7 @@
       font-weight: 600;
       line-height: 1.3;
       margin-bottom: 0.08rem;
+      padding-right: 4.2rem;
     }
     .memo-note {
       font-size: 0.68rem;
@@ -421,6 +422,9 @@
       right: 0.25rem;
       display: none;
       gap: 0.12rem;
+      flex-wrap: wrap;
+      max-width: 76px;
+      justify-content: flex-end;
     }
     .memo:hover .memo-actions { display: flex; }
     .memo-btn {
@@ -659,67 +663,6 @@
     const MAX_DAYS = 30;
     const STORAGE_KEY = 'trip-kanban-v2';
 
-    const DEFAULT_DAYS = [
-      { id: 'd1', num: 1, label: 'Arrival', sub: 'Reykjavík' },
-      { id: 'd2', num: 2, label: 'South Coast D1', sub: 'Skaftafell area' },
-      { id: 'd3', num: 3, label: 'South Coast D2', sub: 'Return Reykjavík' },
-      { id: 'd4', num: 4, label: 'City', sub: 'Reykjavík' },
-      { id: 'd5', num: 5, label: 'Golden Coast', sub: 'Reykjavík' },
-      { id: 'd6', num: 6, label: 'City', sub: 'Reykjavík' },
-      { id: 'd7', num: 7, label: 'Departure 11:55', sub: 'Airport by 09:55' },
-    ];
-
-    const DEFAULT_BINDINGS = [{ a: 'd2', b: 'd3' }];
-
-    const DEFAULT_MEMOS = [
-      { id: 'm1', dayId: 'd1', period: 'am', title: 'Land KEF 10:50', note: 'Clearance ~40 min + Flybus ~50 min', type: 'drive', start: '10:50', end: '12:25' },
-      { id: 'm2', dayId: 'd1', period: 'pm', title: 'Check-in + lunch', note: '', type: 'food', start: '13:00', end: '' },
-      { id: 'm4', dayId: 'd1', period: 'pm', title: 'National Museum of Iceland', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm5', dayId: 'd1', period: 'pm', title: 'Kaffihús Vesturbæjar', note: 'Melhagi 20, 107 Reykjavík', type: 'relax', start: '', end: '' },
-      { id: 'm6', dayId: 'd1', period: 'pm', title: 'How to become Icelandic in 60 min', note: 'Harpa · Kaldalón', type: 'culture', start: '19:00', end: '20:00' },
-      { id: 'm7', dayId: 'd1', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'tour-sc1', dayId: 'd2', period: 'am', title: '★ 2-Day South Coast + Ice Cave', note: '2-day · Pickup 09:00 · South coast day', type: 'nature', start: '09:00', end: '' },
-      { id: 'tour-sc1b', dayId: 'd2', period: 'am', title: '★ Waterfalls', note: 'Seljalandsfoss · Skógafoss', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1c', dayId: 'd2', period: 'pm', title: '★ Black Sand Beach', note: 'Reynisfjara', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc1d', dayId: 'd2', period: 'pm', title: '★ Hotel Skaftafell area', note: 'Overnight + optional NL', type: 'relax', start: '', end: '' },
-
-      { id: 'tour-sc2', dayId: 'd3', period: 'am', title: '★ 2-Day tour continues', note: 'Ice cave + lagoon day', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2b', dayId: 'd3', period: 'am', title: '★ Glacier Lagoon', note: 'Jökulsárlón', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2c', dayId: 'd3', period: 'am', title: '★ Diamond Beach', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2d', dayId: 'd3', period: 'pm', title: '★ Ice Cave', note: '', type: 'nature', start: '', end: '' },
-      { id: 'tour-sc2e', dayId: 'd3', period: 'pm', title: '★ Return Reykjavík', note: 'Drop-off ~21:00', type: 'drive', start: '', end: '21:00' },
-
-      { id: 'm29', dayId: 'd4', period: 'am', title: 'Recovery morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm30', dayId: 'd4', period: 'am', title: 'Reykjavik Roasters', note: 'Kárastígur 1, 101 Reykjavík', type: 'relax', start: '', end: '' },
-      { id: 'm31', dayId: 'd4', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm32', dayId: 'd4', period: 'pm', title: 'Free afternoon', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm34', dayId: 'd4', period: 'pm', title: 'The Icelandic Phallological Museum', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm35', dayId: 'd4', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'm-mokka', dayId: 'd5', period: 'am', title: 'Breakfast · Mokka Kaffi', note: 'Skólavörðustígur', type: 'food', start: '', end: '' },
-      { id: 'm-free', dayId: 'd5', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'tour-gc', dayId: 'd5', period: 'pm', title: '★ Golden Circle Aurora Surprise', note: 'Half-day · Pickup 12:00', type: 'nature', start: '12:00', end: '' },
-      { id: 'tour-gc2', dayId: 'd5', period: 'pm', title: '★ GC continues', note: 'Geysir · Gullfoss · Kerið', type: 'nature', start: '', end: '' },
-      { id: 'tour-gc3', dayId: 'd5', period: 'pm', title: '★ Dinner', note: 'Drop-off Reykjavík', type: 'food', start: '', end: '' },
-      { id: 'tour-gc4', dayId: 'd5', period: 'pm', title: '★ Northern Lights hunt', note: 'Pickup ~20:30 · return ~00:00', type: 'nature', start: '20:30', end: '00:00' },
-
-      { id: 'm36', dayId: 'd6', period: 'am', title: 'Free morning', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm37', dayId: 'd6', period: 'am', title: 'City walk', note: '', type: 'culture', start: '', end: '' },
-      { id: 'm38', dayId: 'd6', period: 'pm', title: 'Lunch', note: '', type: 'food', start: '', end: '' },
-      { id: 'm40', dayId: 'd6', period: 'pm', title: 'Cafe / Bookstore', note: '', type: 'relax', start: '', end: '' },
-      { id: 'm42', dayId: 'd6', period: 'pm', title: 'Dinner', note: '', type: 'food', start: '', end: '' },
-
-      { id: 'm43', dayId: 'd7', period: 'am', title: 'Breakfast + pack', note: 'Leave ~09:05', type: 'food', start: '', end: '09:05' },
-      { id: 'm44', dayId: 'd7', period: 'am', title: 'Transfer to KEF', note: '2h before flight', type: 'drive', start: '09:05', end: '09:55' },
-      { id: 'm45', dayId: 'd7', period: 'am', title: 'Departure 11:55', note: '', type: 'drive', start: '11:55', end: '' },
-
-      { id: 'm3', dayId: 'pool', period: 'pool', title: 'Hallgrímskirkja', note: '哈德格里米爾教堂', type: 'culture', start: '', end: '' },
-      { id: 'pool-12tonar', dayId: 'pool', period: 'pool', title: '12 Tónar', note: 'Record shop · Skólavörðustígur', type: 'culture', start: '', end: '' },
-      { id: 'pool-bioparadis', dayId: 'pool', period: 'pool', title: 'Bíó Paradís', note: 'Cinema · Hverfisgata', type: 'culture', start: '', end: '' },
-      { id: 'pool-idazimsen', dayId: 'pool', period: 'pool', title: 'Iða Zimsen', note: 'Cafe / hangout', type: 'relax', start: '', end: '' },
-    ];
-
     let memos = [];
     let bindings = [];
     let editingId = null;
@@ -727,7 +670,7 @@
     let draggedId = null;
     let days = [];
     let planTitle = 'Trip Plan';
-    let startDate = null; // 'YYYY-MM-DD' or null
+    let startDate = null;
     let endDate = null;
     let syncingScroll = false;
     let isAddingNew = false;
@@ -765,7 +708,6 @@
     }
 
     function dateForDayIndex(index) {
-      // index 0-based
       if (!startDate) return '';
       const d = parseISODate(startDate);
       if (!d) return '';
@@ -783,7 +725,6 @@
       days.forEach((d, i) => {
         d.num = i + 1;
         let label = d.label || stripDateFromTitle(d.title) || '';
-        // Default "Day N" labels track the current position after move/delete
         if (!label || /^Day\s+\d+$/i.test(label.trim())) {
           label = 'Day ' + d.num;
         }
@@ -835,8 +776,6 @@
       startDate = val;
       if (startDate) {
         recomputeEndFromStart();
-      } else if (!endDate) {
-        // both cleared
       }
       syncDayTitles();
       saveState();
@@ -861,7 +800,6 @@
       return days[0] ? days[0].id : null;
     }
 
-    /* —— Bindings —— */
     function isBoundPair(idA, idB) {
       return bindings.some(p => p.a === idA && p.b === idB);
     }
@@ -960,15 +898,115 @@
       };
     }
 
-    function buildDefaultState() {
-      days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
-      memos = JSON.parse(JSON.stringify(DEFAULT_MEMOS));
-      bindings = JSON.parse(JSON.stringify(DEFAULT_BINDINGS));
-      planTitle = '🇮🇸 Iceland 7-Day Plan';
+    function seedDayMemos(dayId) {
+      memos.push({
+        id: uid(),
+        dayId: dayId,
+        period: 'am',
+        title: 'AM activity',
+        note: '',
+        type: 'nature',
+        start: '',
+        end: ''
+      });
+      memos.push({
+        id: uid(),
+        dayId: dayId,
+        period: 'pm',
+        title: 'PM activity',
+        note: '',
+        type: 'culture',
+        start: '',
+        end: ''
+      });
+    }
+
+    function m(dayId, period, title, note, type, start, end) {
+      return {
+        id: uid(),
+        dayId,
+        period,
+        title,
+        note: note || '',
+        type: type || 'culture',
+        start: start || '',
+        end: end || ''
+      };
+    }
+
+    function buildDefaultIcelandPlan() {
+      const d1 = { id: 'd1', num: 1, label: 'Arrival', sub: 'Reykjavík', title: 'Arrival' };
+      const d2 = { id: 'd2', num: 2, label: 'South Coast D1', sub: 'Skaftafell area', title: 'South Coast D1' };
+      const d3 = { id: 'd3', num: 3, label: 'South Coast D2', sub: 'Return Reykjavík', title: 'South Coast D2' };
+      const d4 = { id: 'd4', num: 4, label: 'City', sub: 'Reykjavík', title: 'City' };
+      const d5 = { id: 'd5', num: 5, label: 'Golden Coast', sub: 'Reykjavík + Golden Coast', title: 'Golden Coast' };
+      const d6 = { id: 'd6', num: 6, label: 'City', sub: 'Reykjavík', title: 'City' };
+      const d7 = { id: 'd7', num: 7, label: 'City', sub: 'Reykjavík', title: 'City' };
+      const d8 = { id: 'd8', num: 8, label: 'Departure 11:55', sub: 'Airport by 09:55', title: 'Departure 11:55' };
+
+      days = [d1, d2, d3, d4, d5, d6, d7, d8];
+      bindings = [{ a: 'd2', b: 'd3' }];
+      planTitle = 'Iceland 8-Day Plan';
       startDate = '2026-11-21';
-      endDate = '2026-11-27';
-      ensureAllBindings();
+      endDate = '2026-11-28';
+
+      memos = [
+        m('d1', 'am', 'Land KEF 10:50', 'Clearance ~40 min + Flybus ~50 min', 'drive', '10:50', '12:25'),
+        m('d1', 'pm', 'Check-in + lunch', '', 'food', '13:00', ''),
+        m('d1', 'pm', 'Nordic House', '', 'culture', '', ''),
+        m('d1', 'pm', 'Kaffihús Vesturbæjar', 'Cafe - Melhagi 20, 107 Reykjavík', 'food', '', ''),
+        m('d1', 'pm', 'How to become Icelandic in 60 min', 'Harpa · Kaldalón', 'culture', '19:00', '20:00'),
+        m('d1', 'pm', 'Dinner', '', 'food', '', ''),
+
+        m('d2', 'am', '★ 2-Day South Coast + Ice Cave', '2-day · Pickup 09:00 · South coast day', 'nature', '09:00', ''),
+        m('d2', 'am', '★ Waterfalls', 'Seljalandsfoss · Skógafoss', 'nature', '', ''),
+        m('d2', 'pm', '★ Black Sand Beach', 'Reynisfjara', 'nature', '', ''),
+        m('d2', 'pm', '★ Hotel Skaftafell area', 'Overnight + optional NL', 'relax', '', ''),
+
+        m('d3', 'am', '★ 2-Day tour continues', 'Ice cave + lagoon day', 'nature', '', ''),
+        m('d3', 'am', '★ Glacier Lagoon', 'Jökulsárlón', 'nature', '', ''),
+        m('d3', 'am', '★ Diamond Beach', '', 'nature', '', ''),
+        m('d3', 'pm', '★ Ice Cave', '', 'nature', '', ''),
+        m('d3', 'pm', '★ Return Reykjavík', 'Drop-off ~21:00', 'drive', '', '21:00'),
+
+        m('d4', 'am', 'Free morning', '', 'relax', '', ''),
+        m('d4', 'am', 'Reykjavik Roasters', 'Cafe - Kárastígur 1, 101 Reykjavík', 'food', '', ''),
+        m('d4', 'am', 'The Icelandic Phallological Museum', '', 'culture', '', ''),
+        m('d4', 'pm', 'Lunch', '', 'food', '', ''),
+        m('d4', 'pm', 'Iða Zimsen', 'Bookstore / hangout', 'relax', '', ''),
+        m('d4', 'pm', 'Dinner', '', 'food', '', ''),
+        m('d4', 'pm', '12 Tónar', 'Record shop · Skólavörðustígur', 'culture', '', ''),
+
+        m('d5', 'am', 'Breakfast · Mokka Kaffi', 'Cafe - Skólavörðustígur 3A, 101 Reykjavík', 'food', '', ''),
+        m('d5', 'pm', '★ Golden Circle Aurora Surprise', 'Half-day · Pickup 12:00', 'nature', '12:00', ''),
+        m('d5', 'pm', '★ GC continues', 'Geysir · Gullfoss · Kerið', 'nature', '', ''),
+        m('d5', 'pm', '★ Dinner', 'Drop-off Reykjavík', 'food', '', ''),
+        m('d5', 'pm', '★ Northern Lights hunt', 'Pickup ~20:30 · return ~00:00', 'nature', '20:30', '00:00'),
+
+        m('d6', 'am', 'Recovery morning', '', 'relax', '', ''),
+        m('d6', 'pm', 'Lunch', '', 'food', '', ''),
+        m('d6', 'pm', 'Bíó Paradís', 'Cinema · Hverfisgata', 'culture', '', ''),
+        m('d6', 'pm', 'Dinner', '', 'food', '', ''),
+
+        m('d7', 'am', 'Free morning', '', 'relax', '', ''),
+        m('d7', 'am', 'National Museum of Iceland', '', 'culture', '', ''),
+        m('d7', 'pm', 'Lunch', '', 'food', '', ''),
+        m('d7', 'pm', 'Cafe / Bookstore', '', 'culture', '', ''),
+        m('d7', 'pm', 'Dinner', '', 'food', '', ''),
+
+        m('d8', 'am', 'Breakfast + pack', 'Leave ~09:05', 'food', '', '09:05'),
+        m('d8', 'am', 'Transfer to KEF', '2h before flight', 'drive', '09:05', '09:55'),
+        m('d8', 'am', 'Departure 11:55', '', 'drive', '11:55', ''),
+
+        m('pool', 'pool', 'Kaffivagninn', 'Lunch/Dinner - Grandagarður 10, 101 Reykjavík', 'food', '', ''),
+        m('pool', 'pool', 'Snaps Bistro', 'Lunch/Dinner - Þórsgata 1, 101 Reykjavík', 'food', '', '')
+      ];
+
       syncDayTitles();
+    }
+
+    function buildEmptyState() {
+      buildDefaultIcelandPlan();
     }
 
     function loadState() {
@@ -992,7 +1030,7 @@
           return;
         }
       } catch (e) {}
-      buildDefaultState();
+      buildEmptyState();
     }
 
     function saveState() {
@@ -1020,6 +1058,7 @@
       }
       const d = createDefaultDay(days.length + 1);
       days.push(d);
+      seedDayMemos(d.id);
       if (startDate) recomputeEndFromStart();
       else if (endDate) recomputeStartFromEnd();
       syncDayTitles();
@@ -1060,6 +1099,61 @@
       return 'until ' + end;
     }
 
+    function memosInSlot(dayId, period) {
+      return memos.filter(m => m.dayId === dayId && m.period === period);
+    }
+
+    function reorderMemoInSlot(id, dayId, period, targetIndex) {
+      const memo = memos.find(m => m.id === id);
+      if (!memo) return;
+      memo.dayId = dayId;
+      memo.period = period;
+
+      const without = memos.filter(m => m.id !== id);
+      const before = [];
+      const slot = [];
+      const after = [];
+      let phase = 'before';
+      for (const m of without) {
+        const inSlot = m.dayId === dayId && m.period === period;
+        if (phase === 'before') {
+          if (inSlot) {
+            phase = 'slot';
+            slot.push(m);
+          } else {
+            before.push(m);
+          }
+        } else if (phase === 'slot') {
+          if (inSlot) slot.push(m);
+          else {
+            phase = 'after';
+            after.push(m);
+          }
+        } else {
+          after.push(m);
+        }
+      }
+      const idx = Math.max(0, Math.min(targetIndex, slot.length));
+      slot.splice(idx, 0, memo);
+      memos = before.concat(slot, after);
+    }
+
+    function moveMemoInSlot(id, direction) {
+      const memo = memos.find(m => m.id === id);
+      if (!memo) return;
+      const slot = memosInSlot(memo.dayId, memo.period);
+      const idx = slot.findIndex(m => m.id === id);
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= slot.length) {
+        showToast(direction < 0 ? 'Already at top' : 'Already at bottom');
+        return;
+      }
+      reorderMemoInSlot(id, memo.dayId, memo.period, newIdx);
+      saveState();
+      renderBoard();
+      showToast(direction < 0 ? 'Moved up' : 'Moved down');
+    }
+
     function createMemoEl(m) {
       const el = document.createElement('div');
       el.className = 'memo ' + m.type;
@@ -1068,6 +1162,8 @@
       const timeStr = formatTimeRange(m.start, m.end);
       el.innerHTML = `
         <div class="memo-actions">
+          <button class="memo-btn" title="Move up" onclick="event.stopPropagation(); moveMemoInSlot('${m.id}', -1)">↑</button>
+          <button class="memo-btn" title="Move down" onclick="event.stopPropagation(); moveMemoInSlot('${m.id}', 1)">↓</button>
           <button class="memo-btn" title="Edit" onclick="event.stopPropagation(); openEditModal('${m.id}')">✎</button>
           <button class="memo-btn" title="Delete" onclick="event.stopPropagation(); deleteMemo('${m.id}')">×</button>
         </div>
@@ -1134,748 +1230,4 @@
             <div class="day-col-header-row">
               <h2>
                 <span class="day-num">${day.num}</span>
-                <span class="day-title-edit" contenteditable="true" data-day-id="${day.id}" data-field="label" spellcheck="false">${escapeHtml(day.title)}</span>
-              </h2>
-              <div class="day-move-btns">
-                <button class="day-move-btn" title="Move left" ${canLeft ? '' : 'disabled'} onclick="moveDay('${day.id}', -1)">←</button>
-                <button class="day-move-btn" title="Move right" ${canRight ? '' : 'disabled'} onclick="moveDay('${day.id}', 1)">→</button>
-                <button class="${bindClass}" title="${bindTitle}" ${canBindNext ? '' : 'disabled'} onclick="toggleBindWithNext('${day.id}')">${bindLabel}</button>
-                <button class="day-del-btn" title="Delete day" ${canDelete ? '' : 'disabled'} onclick="deleteDay('${day.id}')">×</button>
-              </div>
-            </div>
-            <div class="day-sub day-sub-edit" contenteditable="true" data-day-id="${day.id}" data-field="sub" spellcheck="false">${escapeHtml(day.sub || '')}</div>
-            ${badge}
-          </div>
-          <div class="slots" id="slots-${day.id}"></div>
-        `;
-        col.querySelectorAll('[contenteditable]').forEach(el => {
-          el.addEventListener('blur', () => {
-            const id = el.dataset.dayId;
-            const field = el.dataset.field;
-            const d = days.find(x => x.id === id);
-            if (!d) return;
-            if (field === 'label') {
-              const raw = el.textContent.trim();
-              d.label = stripDateFromTitle(raw) || raw || ('Day ' + d.num);
-              syncDayTitles();
-              el.textContent = d.title;
-            } else {
-              d[field] = el.textContent.trim();
-            }
-            saveState();
-          });
-          el.addEventListener('keydown', e => {
-            if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
-          });
-        });
-        board.appendChild(col);
-
-        const slotsEl = col.querySelector('.slots');
-        PERIODS.forEach(period => {
-          const slotDiv = document.createElement('div');
-          slotDiv.className = 'slot';
-          slotDiv.dataset.dayId = day.id;
-          slotDiv.dataset.period = period.id;
-          const list = sortByIdSequence(
-            memos.filter(m => m.dayId === day.id && m.period === period.id)
-          );
-          slotDiv.innerHTML = `
-            <div class="slot-label">${period.label}</div>
-            <div class="slot-cards" data-day="${day.id}" data-period="${period.id}"></div>
-            <button type="button" class="slot-add-btn" onclick="openAddToSlot('${day.id}', '${period.id}')">+ Add to ${period.id.toUpperCase()}</button>
-          `;
-          slotDiv.addEventListener('dragover', onDragOver);
-          slotDiv.addEventListener('dragleave', onDragLeave);
-          slotDiv.addEventListener('drop', onDrop);
-          slotsEl.appendChild(slotDiv);
-
-          const cardsEl = slotDiv.querySelector('.slot-cards');
-          list.forEach(m => cardsEl.appendChild(createMemoEl(m)));
-        });
-      });
-
-      const poolCol = document.createElement('div');
-      poolCol.className = 'pool-col';
-      poolCol.innerHTML = `
-        <div class="day-col-header">
-          <h2 style="font-size:0.9rem;font-weight:650;">📋 Pool</h2>
-          <div class="day-sub">Unscheduled · drag to a day to schedule</div>
-        </div>
-        <div class="pool-add-zone">
-          <button type="button" class="pool-add-btn" onclick="openAddToPool()">+ Add to pool</button>
-        </div>
-        <div class="slots">
-          <div class="slot" data-day-id="pool" data-period="pool">
-            <div class="slot-cards" data-day="pool" data-period="pool" id="pool-cards"></div>
-          </div>
-        </div>
-      `;
-      const poolSlot = poolCol.querySelector('.slot');
-      poolSlot.addEventListener('dragover', onDragOver);
-      poolSlot.addEventListener('dragleave', onDragLeave);
-      poolSlot.addEventListener('drop', onDrop);
-      board.appendChild(poolCol);
-
-      const poolCards = document.getElementById('pool-cards');
-      sortByIdSequence(memos.filter(m => m.dayId === 'pool')).forEach(m => {
-        poolCards.appendChild(createMemoEl(m));
-      });
-
-      updateTitleUI();
-      updateAddDayBtn();
-      updateDateHint();
-      requestAnimationFrame(updateHScrollSpacer);
-    }
-
-    function moveDay(dayId, direction) {
-      ensureAllBindings();
-      const { startIndex, items } = getBoundBlock(dayId);
-      if (!items.length) return;
-
-      const len = items.length;
-      const newStart = startIndex + direction;
-      if (newStart < 0 || newStart + len > days.length) {
-        showToast('Cannot move further');
-        return;
-      }
-
-      const block = days.splice(startIndex, len);
-      days.splice(newStart, 0, ...block);
-
-      ensureAllBindings();
-      syncDayTitles();
-      saveState();
-      renderBoard();
-      showToast(direction < 0 ? 'Moved left' : 'Moved right');
-    }
-
-    function onDragStart(e) {
-      const card = e.target.closest('.memo');
-      const id = card && card.dataset.id;
-      if (!id) { e.preventDefault(); return; }
-      draggedId = id;
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', id);
-    }
-    function onDragEnd(e) {
-      const card = e.target.closest('.memo');
-      if (card) card.classList.remove('dragging');
-      document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
-      draggedId = null;
-    }
-    function onDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      e.currentTarget.classList.add('drag-over');
-    }
-    function onDragLeave(e) {
-      e.currentTarget.classList.remove('drag-over');
-    }
-    function onDrop(e) {
-      e.preventDefault();
-      const slot = e.currentTarget;
-      slot.classList.remove('drag-over');
-      const id = e.dataTransfer.getData('text/plain') || draggedId;
-      if (!id) return;
-      const dayId = slot.dataset.dayId;
-      const period = slot.dataset.period;
-      const memo = memos.find(m => m.id === id);
-      if (!memo) return;
-
-      memo.dayId = dayId;
-      if (dayId === 'pool') {
-        memo.period = 'pool';
-        memo.start = '';
-        memo.end = '';
-      } else {
-        memo.period = period === 'pm' ? 'pm' : 'am';
-      }
-      saveState();
-      renderBoard();
-      showToast('Moved: ' + memo.title);
-    }
-
-    function fillDaySelect(selectedId) {
-      const sel = document.getElementById('f-day');
-      sel.innerHTML = '';
-      days.forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d.id;
-        opt.textContent = 'Day ' + d.num + ' · ' + (d.label || d.title);
-        if (d.id === selectedId) opt.selected = true;
-        sel.appendChild(opt);
-      });
-      const poolOpt = document.createElement('option');
-      poolOpt.value = 'pool';
-      poolOpt.textContent = '📋 Pool';
-      if (selectedId === 'pool') poolOpt.selected = true;
-      sel.appendChild(poolOpt);
-    }
-
-    function syncPeriodVisibility() {
-      const daySel = document.getElementById('f-day');
-      const periodWrap = document.getElementById('f-period-wrap');
-      if (!daySel || !periodWrap) return;
-      periodWrap.style.display = daySel.value === 'pool' ? 'none' : 'block';
-    }
-
-    function openEditModal(id) {
-      const m = memos.find(x => x.id === id);
-      if (!m) return;
-      editingId = id;
-      isAddingNew = false;
-      addTarget = { dayId: m.dayId, period: m.period };
-      document.getElementById('modal-title').textContent = 'Edit activity';
-      document.getElementById('f-title').value = m.title;
-      document.getElementById('f-note').value = m.note || '';
-      document.getElementById('f-start').value = m.start || '';
-      document.getElementById('f-end').value = m.end || '';
-      document.getElementById('f-type').value = m.type;
-      document.getElementById('f-period').value = (m.period === 'pm') ? 'pm' : 'am';
-      document.getElementById('f-day-wrap').style.display = 'none';
-      document.getElementById('f-period-wrap').style.display = m.dayId === 'pool' ? 'none' : 'block';
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('f-title').focus();
-    }
-
-    function openAddModalForNew() {
-      editingId = null;
-      isAddingNew = true;
-      const fid = firstDayId();
-      addTarget = { dayId: fid, period: 'am' };
-      document.getElementById('modal-title').textContent = 'Add activity';
-      document.getElementById('f-title').value = '';
-      document.getElementById('f-note').value = '';
-      document.getElementById('f-start').value = '';
-      document.getElementById('f-end').value = '';
-      document.getElementById('f-type').value = 'nature';
-      document.getElementById('f-period').value = 'am';
-      fillDaySelect(fid);
-      document.getElementById('f-day-wrap').style.display = 'block';
-      document.getElementById('f-day').onchange = syncPeriodVisibility;
-      syncPeriodVisibility();
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('f-title').focus();
-    }
-
-    function openAddToPool() {
-      editingId = null;
-      isAddingNew = true;
-      addTarget = { dayId: 'pool', period: 'pool' };
-      document.getElementById('modal-title').textContent = 'Add to pool';
-      document.getElementById('f-title').value = '';
-      document.getElementById('f-note').value = '';
-      document.getElementById('f-start').value = '';
-      document.getElementById('f-end').value = '';
-      document.getElementById('f-type').value = 'culture';
-      document.getElementById('f-period').value = 'am';
-      fillDaySelect('pool');
-      document.getElementById('f-day-wrap').style.display = 'block';
-      document.getElementById('f-day').onchange = syncPeriodVisibility;
-      syncPeriodVisibility();
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('f-title').focus();
-    }
-
-    function openAddToSlot(dayId, period) {
-      editingId = null;
-      isAddingNew = true;
-      addTarget = { dayId, period };
-      document.getElementById('modal-title').textContent = 'Add activity';
-      document.getElementById('f-title').value = '';
-      document.getElementById('f-note').value = '';
-      document.getElementById('f-start').value = '';
-      document.getElementById('f-end').value = '';
-      document.getElementById('f-type').value = 'nature';
-      document.getElementById('f-period').value = period === 'pm' ? 'pm' : 'am';
-      fillDaySelect(dayId);
-      document.getElementById('f-day-wrap').style.display = 'block';
-      document.getElementById('f-day').onchange = syncPeriodVisibility;
-      syncPeriodVisibility();
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('f-title').focus();
-    }
-
-    function closeModal() {
-      document.getElementById('modal').classList.remove('show');
-      editingId = null;
-      isAddingNew = false;
-      document.getElementById('f-day-wrap').style.display = 'none';
-      document.getElementById('f-period-wrap').style.display = 'block';
-    }
-
-    function saveMemo() {
-      const title = document.getElementById('f-title').value.trim();
-      if (!title) { showToast('Title is required'); return; }
-      const note = document.getElementById('f-note').value.trim();
-      const type = document.getElementById('f-type').value;
-      const start = document.getElementById('f-start').value;
-      const end = document.getElementById('f-end').value;
-      let period = document.getElementById('f-period').value;
-
-      if (editingId) {
-        const m = memos.find(x => x.id === editingId);
-        if (m) {
-          m.title = title;
-          m.note = note;
-          m.type = type;
-          m.start = start;
-          m.end = end;
-          if (m.dayId !== 'pool') m.period = period;
-        }
-      } else {
-        let dayId = addTarget.dayId || firstDayId();
-        if (isAddingNew) {
-          const sel = document.getElementById('f-day');
-          if (sel && sel.value) dayId = sel.value;
-        }
-        if (dayId === 'pool') period = 'pool';
-        memos.push({
-          id: uid(),
-          dayId,
-          period: dayId === 'pool' ? 'pool' : (period || 'am'),
-          title, note, type,
-          start: dayId === 'pool' ? '' : start,
-          end: dayId === 'pool' ? '' : end
-        });
-      }
-      saveState();
-      closeModal();
-      renderBoard();
-      showToast(editingId ? 'Updated' : 'Added');
-    }
-
-    function deleteMemo(id) {
-      if (!confirm('Delete this activity?')) return;
-      memos = memos.filter(m => m.id !== id);
-      saveState();
-      renderBoard();
-      showToast('Deleted');
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1800);
-    }
-
-    function resetBoard() {
-      if (!confirm('Reset to the default Iceland 7-day plan? Your changes will be lost.')) return;
-      buildDefaultState();
-      document.getElementById('date-start').value = startDate || '';
-      document.getElementById('date-end').value = endDate || '';
-      saveState();
-      renderBoard();
-      showToast('Reset to default Iceland plan');
-    }
-
-    function buildSummaryText() {
-      const lines = [];
-      lines.push(planTitle || 'Trip Plan');
-      if (startDate || endDate) {
-        lines.push('Dates: ' + (startDate || '?') + ' → ' + (endDate || '?'));
-      }
-      if (bindings.length) {
-        lines.push('Bound: ' + bindings.map(p => {
-          const na = days.find(d => d.id === p.a);
-          const nb = days.find(d => d.id === p.b);
-          return (na ? 'Day ' + na.num : p.a) + '+' + (nb ? 'Day ' + nb.num : p.b);
-        }).join(', '));
-      }
-      lines.push('─'.repeat(28));
-      days.forEach(day => {
-        lines.push('');
-        lines.push(`Day ${day.num} · ${day.title}`);
-        if (day.sub) lines.push(`  (${day.sub})`);
-        PERIODS.forEach(period => {
-          const list = sortByIdSequence(memos.filter(m => m.dayId === day.id && m.period === period.id));
-          if (!list.length) return;
-          lines.push(`  ${period.id.toUpperCase()}`);
-          list.forEach(m => {
-            const t = formatTimeRange(m.start, m.end);
-            lines.push(`  • ${m.title}${t ? ' [' + t + ']' : ''}${m.note ? ' — ' + m.note : ''}`);
-          });
-        });
-      });
-      const pool = sortByIdSequence(memos.filter(m => m.dayId === 'pool'));
-      lines.push('');
-      lines.push('📋 Pool');
-      if (pool.length) {
-        pool.forEach(m => lines.push(`  • ${m.title}${m.note ? ' — ' + m.note : ''}`));
-      } else {
-        lines.push('  (none)');
-      }
-      lines.push('');
-      lines.push('─'.repeat(28));
-      return lines.join('\n');
-    }
-
-    function exportSummary() {
-      document.getElementById('summary-text').value = buildSummaryText();
-      document.getElementById('summary-modal').classList.add('show');
-    }
-    function closeSummaryModal() {
-      document.getElementById('summary-modal').classList.remove('show');
-    }
-    async function copySummary() {
-      const text = document.getElementById('summary-text').value;
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast('Copied to clipboard');
-      } catch (e) {
-        document.getElementById('summary-text').select();
-        try { document.execCommand('copy'); showToast('Copied to clipboard'); }
-        catch (e2) { showToast('Select text and copy manually'); }
-      }
-    }
-
-    function openImportModal() {
-      document.getElementById('import-text').value = '';
-      document.getElementById('import-modal').classList.add('show');
-      document.getElementById('import-text').focus();
-    }
-    function closeImportModal() {
-      document.getElementById('import-modal').classList.remove('show');
-    }
-
-    function parseTimeBit(s) {
-      let start = '', end = '';
-      const m = s.match(/\[([^\]]+)\]/);
-      if (!m) return { start, end, rest: s };
-      const inner = m[1].trim();
-      const range = inner.match(/^(\d{1,2}:\d{2})\s*[–\-]\s*(\d{1,2}:\d{2})$/);
-      if (range) { start = range[1]; end = range[2]; }
-      else {
-        const from = inner.match(/^from\s+(\d{1,2}:\d{2})$/i);
-        const until = inner.match(/^until\s+(\d{1,2}:\d{2})$/i);
-        if (from) start = from[1];
-        if (until) end = until[1];
-      }
-      return { start, end, rest: s.replace(m[0], '').trim() };
-    }
-
-    function guessType(title) {
-      const t = title.toLowerCase();
-      if (/land|transfer|flybus|departure|return|airport|kef|drive|pickup|drop/.test(t)) return 'drive';
-      if (/lunch|dinner|breakfast|food|mokka|cafe|kaffi|roasters/.test(t)) return 'food';
-      if (/museum|church|hallgr|harpa|walk|city|cinema|12 tónar|paradís|phallolog/.test(t)) return 'culture';
-      if (/hotel|free|recovery|bookstore|zimsen|vesturb/.test(t)) return 'relax';
-      if (/★|waterfall|glacier|beach|cave|golden|northern|coast|lagoon|diamond|geysir|gullfoss/.test(t)) return 'nature';
-      return 'culture';
-    }
-
-    function parseSummary(text) {
-      const lines = text.replace(/\r\n/g, '\n').split('\n');
-      const newDays = [];
-      const newMemos = [];
-      let currentDay = null;
-      let currentPeriod = 'am';
-      let inPool = false;
-      let importedBindings = [];
-      let importedTitle = null;
-      let importedStart = null;
-      let importedEnd = null;
-
-      for (let raw of lines) {
-        const line = raw.replace(/\s+$/, '');
-        if (!line.trim() || /^[─\-═]+$/.test(line.trim())) continue;
-
-        if (/Iceland\s+\d+-Day/i.test(line) || line.includes('🇮🇸')) {
-          importedTitle = line.replace(/🇮🇸\s*/, '').trim();
-          continue;
-        }
-
-        const datesLine = line.match(/^Dates:\s*(.+?)\s*→\s*(.+)$/i);
-        if (datesLine) {
-          const s = datesLine[1].trim();
-          const e = datesLine[2].trim();
-          if (/^\d{4}-\d{2}-\d{2}$/.test(s)) importedStart = s;
-          if (/^\d{4}-\d{2}-\d{2}$/.test(e)) importedEnd = e;
-          continue;
-        }
-
-        // First non-empty non-separator line that isn't Day/Pool/Bound/Dates can be title
-        if (!importedTitle && !/^Day\s+\d+/i.test(line) && !/^Bound:/i.test(line) && !/^📋?\s*Pool/i.test(line) && !/^Dates:/i.test(line)) {
-          importedTitle = line.trim();
-          continue;
-        }
-
-        const boundLine = line.match(/^Bound:\s*(.+)$/i);
-        if (boundLine) {
-          boundLine[1].split(',').forEach(part => {
-            const m = part.trim().match(/Day\s+(\d+)\s*\+\s*Day\s+(\d+)/i);
-            if (m) importedBindings.push({ na: parseInt(m[1], 10), nb: parseInt(m[2], 10) });
-          });
-          continue;
-        }
-
-        if (/^📋?\s*Pool/i.test(line.trim()) || /Unassigned/i.test(line)) {
-          inPool = true;
-          currentDay = null;
-          continue;
-        }
-        if (inPool && /^\s*\(none\)\s*$/i.test(line)) continue;
-
-        const dayMatch = line.match(/^Day\s+(\d+)\s*[·•.\-]\s*(.+)$/i);
-        if (dayMatch) {
-          inPool = false;
-          const dayCounter = parseInt(dayMatch[1], 10);
-          const fullTitle = dayMatch[2].trim();
-          const label = stripDateFromTitle(fullTitle);
-          let id = 'd' + dayCounter;
-          if (newDays.some(d => d.id === id)) {
-            id = 'd-imp-' + dayCounter + '-' + Math.random().toString(36).slice(2, 5);
-          }
-          currentDay = { id, num: dayCounter, title: fullTitle, label, sub: '' };
-          newDays.push(currentDay);
-          currentPeriod = 'am';
-          continue;
-        }
-
-        const subMatch = line.match(/^\s*\((.+)\)\s*$/);
-        if (subMatch && currentDay && !inPool) {
-          currentDay.sub = subMatch[1].trim();
-          continue;
-        }
-
-        if (/^\s*AM\s*$/i.test(line)) { currentPeriod = 'am'; continue; }
-        if (/^\s*PM\s*$/i.test(line)) { currentPeriod = 'pm'; continue; }
-
-        const bullet = line.match(/^\s*[•\-\*]\s+(.+)$/);
-        if (bullet) {
-          let body = bullet[1].trim();
-          let note = '';
-          const emDash = body.indexOf(' — ');
-          if (emDash > 0) {
-            const before = body.slice(0, emDash);
-            if (!before.includes('[') || before.includes(']')) {
-              note = body.slice(emDash + 3).trim();
-              body = before.trim();
-            }
-          }
-          const { start, end, rest } = parseTimeBit(body);
-          const title = rest.replace(/\s*[—–]\s*$/, '').trim();
-          if (!title) continue;
-
-          if (inPool) {
-            newMemos.push({
-              id: uid(), dayId: 'pool', period: 'pool',
-              title, note, type: guessType(title), start: '', end: ''
-            });
-          } else if (currentDay) {
-            newMemos.push({
-              id: uid(), dayId: currentDay.id, period: currentPeriod,
-              title, note, type: guessType(title), start, end
-            });
-          }
-        }
-      }
-
-      if (!newDays.length) throw new Error('No days found. Paste a full exported summary.');
-
-      const used = new Set();
-      newDays.forEach((d, i) => {
-        d.num = i + 1;
-        if (!d.label) d.label = stripDateFromTitle(d.title);
-        if (used.has(d.id)) d.id = 'd-imp-' + d.num;
-        used.add(d.id);
-      });
-
-      // Apply start date for titles if available
-      if (importedStart) {
-        startDate = importedStart;
-        endDate = importedEnd;
-      }
-
-      newDays.forEach((d, i) => {
-        d.num = i + 1;
-        const datePart = importedStart ? (() => {
-          const dt = parseISODate(importedStart);
-          if (!dt) return '';
-          dt.setDate(dt.getDate() + i);
-          return formatDisplayDate(dt);
-        })() : '';
-        d.title = datePart ? (datePart + ' · ' + (d.label || stripDateFromTitle(d.title))) : (d.label || stripDateFromTitle(d.title));
-      });
-
-      const newBindings = [];
-      importedBindings.forEach(({ na, nb }) => {
-        const da = newDays.find(d => d.num === na);
-        const db = newDays.find(d => d.num === nb);
-        if (da && db) newBindings.push({ a: da.id, b: db.id });
-      });
-
-      return {
-        days: newDays,
-        memos: newMemos,
-        bindings: newBindings,
-        planTitle: importedTitle || 'Trip Plan',
-        startDate: importedStart,
-        endDate: importedEnd
-      };
-    }
-
-    function importSummary() {
-      const text = document.getElementById('import-text').value.trim();
-      if (!text) { showToast('Paste a summary first'); return; }
-      try {
-        const parsed = parseSummary(text);
-        if (!confirm('Replace the current plan with the imported summary?')) return;
-        days = parsed.days;
-        memos = parsed.memos;
-        bindings = parsed.bindings || [];
-        planTitle = parsed.planTitle || 'Trip Plan';
-        startDate = parsed.startDate || null;
-        endDate = parsed.endDate || null;
-        if (startDate && !endDate) recomputeEndFromStart();
-        else if (endDate && !startDate) recomputeStartFromEnd();
-        ensureAllBindings();
-        syncDayTitles();
-        document.getElementById('date-start').value = startDate || '';
-        document.getElementById('date-end').value = endDate || '';
-        saveState();
-        closeImportModal();
-        renderBoard();
-        showToast('Imported ' + days.length + ' days, ' + memos.length + ' activities');
-      } catch (e) {
-        console.error(e);
-        showToast(e.message || 'Import failed');
-      }
-    }
-
-    function updateHScrollSpacer() {
-      const board = document.getElementById('board');
-      const spacer = document.getElementById('board-hscroll-spacer');
-      const wrap = document.getElementById('board-wrap');
-      const track = document.getElementById('board-hscroll-track');
-      if (!board || !spacer || !wrap || !track) return;
-      spacer.style.width = Math.max(board.scrollWidth, wrap.clientWidth + 1) + 'px';
-      if (!syncingScroll) {
-        syncingScroll = true;
-        track.scrollLeft = wrap.scrollLeft;
-        syncingScroll = false;
-      }
-    }
-
-    function bindScrollSync() {
-      const wrap = document.getElementById('board-wrap');
-      const track = document.getElementById('board-hscroll-track');
-      wrap.addEventListener('scroll', () => {
-        if (syncingScroll) return;
-        syncingScroll = true;
-        track.scrollLeft = wrap.scrollLeft;
-        syncingScroll = false;
-      });
-      track.addEventListener('scroll', () => {
-        if (syncingScroll) return;
-        syncingScroll = true;
-        wrap.scrollLeft = track.scrollLeft;
-        syncingScroll = false;
-      });
-      window.addEventListener('resize', updateHScrollSpacer);
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        closeModal();
-        closeSummaryModal();
-        closeImportModal();
-      }
-    });
-    document.getElementById('modal').addEventListener('click', e => {
-      if (e.target.id === 'modal') closeModal();
-    });
-    document.getElementById('summary-modal').addEventListener('click', e => {
-      if (e.target.id === 'summary-modal') closeSummaryModal();
-    });
-    document.getElementById('import-modal').addEventListener('click', e => {
-      if (e.target.id === 'import-modal') closeImportModal();
-    });
-
-    // Title editing
-    document.getElementById('plan-title').addEventListener('blur', () => {
-      const t = document.getElementById('plan-title');
-      planTitle = t.textContent.trim() || 'Trip Plan';
-      t.textContent = planTitle;
-      document.title = planTitle;
-      saveState();
-    });
-    document.getElementById('plan-title').addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
-    });
-
-    document.getElementById('date-start').addEventListener('change', onStartDateChange);
-    document.getElementById('date-end').addEventListener('change', onEndDateChange);
-
-    async function exportImage() {
-      showToast('Rendering image…');
-      const board = document.getElementById('board');
-      const wrap = document.getElementById('board-wrap');
-      const cols = Array.from(board.querySelectorAll('.day-col, .pool-col'));
-      const prev = {
-        wrapH: wrap.style.height, wrapO: wrap.style.overflow,
-        boardDisplay: board.style.display, boardFlexDir: board.style.flexDirection,
-        boardFlexWrap: board.style.flexWrap, boardMinW: board.style.minWidth,
-        boardW: board.style.width, boardGap: board.style.gap,
-        colStyles: cols.map(c => ({ w: c.style.width, maxW: c.style.maxWidth, flex: c.style.flex }))
-      };
-      const COL_W = 240, GAP = 10, COLS_PER_ROW = 3;
-      const boardW = COLS_PER_ROW * COL_W + (COLS_PER_ROW - 1) * GAP;
-      wrap.style.height = 'auto';
-      wrap.style.overflow = 'visible';
-      board.style.display = 'flex';
-      board.style.flexDirection = 'row';
-      board.style.flexWrap = 'wrap';
-      board.style.minWidth = '0';
-      board.style.width = boardW + 'px';
-      board.style.gap = GAP + 'px';
-      cols.forEach(col => {
-        col.style.width = COL_W + 'px';
-        col.style.maxWidth = COL_W + 'px';
-        col.style.flex = '0 0 ' + COL_W + 'px';
-      });
-      void board.offsetHeight;
-      board.style.minHeight = board.scrollHeight + 'px';
-      try {
-        const canvas = await html2canvas(board, {
-          backgroundColor: '#0b1220', scale: 2, useCORS: true, logging: false,
-          width: boardW, windowWidth: boardW, windowHeight: board.scrollHeight
-        });
-        const a = document.createElement('a');
-        a.download = 'trip-plan.png';
-        a.href = canvas.toDataURL('image/png');
-        a.click();
-        showToast('PNG downloaded');
-      } catch (e) {
-        console.error(e);
-        showToast('Image export failed');
-      } finally {
-        wrap.style.height = prev.wrapH;
-        wrap.style.overflow = prev.wrapO;
-        board.style.display = prev.boardDisplay;
-        board.style.flexDirection = prev.boardFlexDir;
-        board.style.flexWrap = prev.boardFlexWrap;
-        board.style.minWidth = prev.boardMinW;
-        board.style.width = prev.boardW;
-        board.style.gap = prev.boardGap;
-        cols.forEach((col, i) => {
-          if (prev.colStyles[i]) {
-            col.style.width = prev.colStyles[i].w;
-            col.style.maxWidth = prev.colStyles[i].maxW;
-            col.style.flex = prev.colStyles[i].flex;
-          }
-        });
-      }
-    }
-
-    loadState();
-    document.getElementById('date-start').value = startDate || '';
-    document.getElementById('date-end').value = endDate || '';
-    renderBoard();
-    bindScrollSync();
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body>
-</html>
+                <span class="day-title-edit" contenteditable="true" data-day-id="${day.id}" data-field="label" spellcheck="false">${escape
